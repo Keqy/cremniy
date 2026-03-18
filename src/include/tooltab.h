@@ -15,7 +15,12 @@ protected:
 public:
     explicit ToolTab(QWidget* parent = nullptr) : QWidget(parent) {}
 public slots:
+
+    virtual void setTabData() = 0;
     virtual void saveTabData() = 0;
+
+signals:
+    void refreshDataAllTabsSignal();
 };
 
 #endif // TOOLTAB_H

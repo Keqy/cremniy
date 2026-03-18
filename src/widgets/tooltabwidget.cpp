@@ -11,6 +11,7 @@
 #include <qboxlayout.h>
 #include <qfileinfo.h>
 #include "globalwidgetsmanager.h"
+#include "disassemblertab.h"
 
 ToolTabWidget::ToolTabWidget(QWidget *parent, QString path)
     {
@@ -41,10 +42,14 @@ ToolTabWidget::ToolTabWidget(QWidget *parent, QString path)
     connect(m_codeEditorTab, &CodeEditorTab::modifyData, this, &ToolTabWidget::setupStar);
     connect(m_codeEditorTab, &CodeEditorTab::dataEqual, this, &ToolTabWidget::removeStar);
     connect(m_codeEditorTab, &CodeEditorTab::setHexViewTab, this, &ToolTabWidget::setHexViewTab); // when "Open in HexView" button clicked
+    connect(m_codeEditorTab, &CodeEditorTab::refreshDataAllTabsSignal, m_hexViewTab, &HexViewTab::setTabData);
+    connect(m_codeEditorTab, &CodeEditorTab::refreshDataAllTabsSignal, m_disassemblerTab, &DisassemblerTab::setTabData);
 
     // Hex View Tab
     connect(m_hexViewTab, &HexViewTab::modifyData, this, &ToolTabWidget::setupStar);
     connect(m_hexViewTab, &HexViewTab::dataEqual, this, &ToolTabWidget::removeStar);
+    connect(m_hexViewTab, &HexViewTab::refreshDataAllTabsSignal, m_codeEditorTab, &CodeEditorTab::setTabData);
+    connect(m_hexViewTab, &HexViewTab::refreshDataAllTabsSignal, m_disassemblerTab, &DisassemblerTab::setTabData);
 
     // Disassembler Tab
     connect(m_disassemblerTab, &DisassemblerTab::modifyData, this, &ToolTabWidget::setupStar);

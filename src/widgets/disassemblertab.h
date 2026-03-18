@@ -1,7 +1,6 @@
 #ifndef DISASSEMBLERTAB_H
 #define DISASSEMBLERTAB_H
 
-#include "filecontext.h"
 #include "tooltab.h"
 #include "disassemblerworker.h"
 #include <QWidget>
@@ -25,14 +24,16 @@ public:
     explicit DisassemblerTab(QWidget *parent, QString path);
     ~DisassemblerTab();
 
-    void saveToFile(QString path) override {}
-    void setTabData(QByteArray &data) override;
-
 signals:
     void modifyData(bool modified);
     void requestDisassembly(const QString &filePath, const QString &arch);
 
+public slots:
+    void setTabData() override;
+    void saveTabData() override {};
+
 private slots:
+
     void onSectionFound(const DisasmSection &section);
     void onWorkerFinished();
     void onWorkerError(const QString &msg);
@@ -50,9 +51,6 @@ private:
     void populateSectionCombo();
     void applyFilter();
     void appendLog(const QString &line);
-
-    QString m_filePath;
-    FileContext fileContext;
 
     QThread            *m_thread  = nullptr;
     DisassemblerWorker *m_worker  = nullptr;

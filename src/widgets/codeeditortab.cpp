@@ -112,6 +112,9 @@ CodeEditorTab::CodeEditorTab(QWidget *parent, QString path)
 
 }
 
+// - - override functions - -
+
+// - public slots -
 
 void CodeEditorTab::setTabData(){
 
@@ -131,4 +134,20 @@ void CodeEditorTab::setTabData(){
         forceSetData = false;
     }
 
+}
+
+void CodeEditorTab::saveTabData() {
+    qDebug() << "CodeEditorTab: saveTabData";
+
+    QByteArray data = m_codeEditorWidget->getBData();
+    uint newDataHash = qHash(data, 0);
+    if (newDataHash == m_dataHash) return;
+    m_dataHash = newDataHash;
+
+    FileManager::saveFile(m_fileContext, &data);
+
+    m_codeEditorWidget->document()->setModified(false);
+
+    emit dataEqual();
+    emit refreshDataAllTabsSignal();
 }
